@@ -1,0 +1,21 @@
+{
+  "name": "electron-screenshot-app",
+  "version": "1.0.0",
+  "description": "electron module to create screenshots",
+  "main": "index.js",
+  "scripts": {
+    "test": "ELECTRON_PATH=`node -p \"require('electron-prebuilt')\"`; electron-mocha test.js"
+  },
+  "keywords": [
+    "electron",
+    "screenshot"
+  ],
+  "author": "Fabrice Weinberg <Fabrice@weinberg.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "electron-mocha": "^0.2.1",
+    "electron-prebuilt": "^0.30.1",
+    "eslint": "^0.24.1",
+    "is-png": "^1.0.0"
+  }
+}
