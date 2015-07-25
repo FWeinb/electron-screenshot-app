@@ -7,12 +7,6 @@ sudo: false
 addons:
   apt:
     packages:
-    - libx11
-    - libglib2
-    - libgtk2
-    - libglib2
-    - libatk1
-    - libgdk
     - libcairo2
     - libfreetype6
     - libfontconfig1
@@ -23,9 +17,7 @@ addons:
     - libxfixes3
     - libnss3
     - libnspr4
-    - libgconf
     - libexpat1
-    - libdbus
     - libudev0
 before_script:
   - export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start +extension RANDR;
