@@ -1,4 +1,4 @@
-# electron-screenshot-app
+# electron-screenshot-app [![Build Status](https://travis-ci.org/FWeinb/electron-screenshot-app.svg)](https://travis-ci.org/FWeinb/electron-screenshot-app)
 
 > Make screenshots
 
