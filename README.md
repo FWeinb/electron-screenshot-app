@@ -113,3 +113,10 @@ Default: `false`
 
 This will try to capture the whole page. `width` and `height` are considered the minimum size.
 
+##### nodeIntegration
+
+Type: `Boolean`
+Default: `false`
+
+This will enable node integration in the electron window, be carefull because this can open up some 
+serious security issues.
