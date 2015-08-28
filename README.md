@@ -120,3 +120,16 @@ Default: `false`
 
 This will enable node integration in the electron window, be carefull because this can open up some 
 serious security issues.
+
+
+
+# Changelog
+
+##### `1.1.0`
+
+* Use new `dom-ready` event (>electron@0.31.1) to inject custom css into page before screenshot is taken.
+* Expose `cleanup` to callback to ensure that the window is closed after data was processed.
+
+##### `1.0.0`
+
+* Inital release
