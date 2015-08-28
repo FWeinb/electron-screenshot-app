@@ -17,10 +17,7 @@
     "electron-mocha": "^0.2.1",
     "electron-prebuilt": "^0.31.1",
     "eslint": "^0.24.1",
-    "get-pixels": "^3.2.2",
-    "gm": "^1.18.1",
     "is-png": "^1.0.0",
-    "pngjs": "^0.4.0",
     "pngparse": "^2.0.1",
     "stream-buffers": "^2.2.0"
   }
