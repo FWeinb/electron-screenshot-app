@@ -77,35 +77,32 @@ describe('Screenshot', function () {
     });
   });
 
-  it.only('should inject custom css', function (done) {
+  it('should inject custom css', function (done) {
     screenshot({
       url: 'about:blank',
-      css: 'html,body{ background: rgba(255,0,0,.5); }',
-      width: 1,
-      height: 1
+      width: 1024,
+      height: 768
     },
    function (err, image, cleanup) {
-      try {
+      assert.equal(err, undefined);
+      pngparse.parse(image.data, function (err, pixels) {
         assert.equal(err, undefined);
 
-        pngparse.parse(image.data, function (err, pixels) {
-          assert.equal(err, undefined);
+        // Should be transparent
+        assert.equal(pixels.channels, 4);
+        assert.equal(pixels.width, 1024 * image.size.devicePixelRatio);
+        assert.equal(pixels.height, 768 * image.size.devicePixelRatio);
 
-          // Should be transparent
-          assert.equal(pixels.channels, 4);
+        // Should be red + half transparent
+        assert.equal(pixels.data[0], 255);
+        assert.equal(pixels.data[1], 255);
+        assert.equal(pixels.data[2], 255);
+        assert.equal(pixels.data[3], 255);
 
-          // Should be red + half transparent
-          assert.equal(pixels.data[0], 255);
-          assert.equal(pixels.data[1], 0);
-          assert.equal(pixels.data[2], 0);
-          assert.equal(pixels.data[3], 128);
 
-          cleanup();
-          done();
-        });
-      } catch (e) {
-        console.log(e);
-      }
+        cleanup();
+        done();
+      });
     });
   });
 });

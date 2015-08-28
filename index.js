@@ -81,7 +81,6 @@ module.exports = function (options, callback) {
           obj.size.devicePixelRatio = meta.devicePixelRatio;
 
           callback(undefined, obj, cleanup);
-          //cleanup();
         };
 
         if (typeof options.crop === 'object') {
