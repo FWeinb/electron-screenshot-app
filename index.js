@@ -46,11 +46,6 @@ module.exports = function (options, callback) {
     // Remove any loadTimeout
     clearTimeout(loadTimeout);
 
-    // Inject custom CSS if necessary
-    if (options.css !== undefined) {
-      popupWindow.webContents.insertCSS(options.css);
-    }
-
     var loadEvent = 'Loaded-' + popupWindow.id;
     var sizeEvent = 'Size-' + popupWindow.id;
 
@@ -85,8 +80,8 @@ module.exports = function (options, callback) {
 
           obj.size.devicePixelRatio = meta.devicePixelRatio;
 
-          callback(undefined, obj);
-          cleanup();
+          callback(undefined, obj, cleanup);
+          //cleanup();
         };
 
         if (typeof options.crop === 'object') {
@@ -125,6 +120,13 @@ module.exports = function (options, callback) {
     callback(new Error('Render process crashed'));
     cleanup();
   });
+
+  if (options.css !== undefined) {
+    popupWindow.webContents.on('dom-ready', function () {
+      // Inject custom CSS if necessary
+      popupWindow.webContents.insertCSS(options.css);
+    });
+  }
 
   var asked = false;
   popupWindow.webContents.on('did-stop-loading', function () {
