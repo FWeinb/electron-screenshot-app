@@ -125,6 +125,10 @@ serious security issues.
 
 # Changelog
 
+##### `1.1.1`
+
+* Add workaround for electron issue [#2510](https://github.com/atom/electron/issues/2610) in electron >= 0.30.6 on a Mac 
+
 ##### `1.1.0`
 
 * Use new `dom-ready` event (>electron@0.31.1) to inject custom css into page before screenshot is taken.

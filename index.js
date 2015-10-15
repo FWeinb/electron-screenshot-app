@@ -11,8 +11,8 @@ module.exports = function (options, callback) {
   }
 
   var popupWindow = new BrowserWindow({
-    x: 0,
-    y: 0,
+    x: -(options.width + 100), // Workaround for https://github.com/atom/electron/issues/2610
+    y: -(options.height + 100),
     width: options.width,
     height: options.height,
     show: options.show || false,
@@ -26,6 +26,9 @@ module.exports = function (options, callback) {
     'overlay-scrollbars': true,
     'direct-write': true
   });
+
+  // Workaround for https://github.com/atom/electron/issues/2610
+  popupWindow.showInactive();
 
   var cleanup = function () {
     setTimeout(function () {
