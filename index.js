@@ -5,14 +5,18 @@ var path = require('path');
 var ipc = require('ipc');
 
 module.exports = function (options, callback) {
-
+  var x = 0, y = 0;
   if (process.env.NODESCREENSHOT_SHOW === '1') {
     options.show = true;
+  } else {
+    // Workaround for https://github.com/atom/electron/issues/2610
+    x = -(options.width + 100);
+    y = -(options.height + 100);
   }
 
   var popupWindow = new BrowserWindow({
-    x: -(options.width + 100), // Workaround for https://github.com/atom/electron/issues/2610
-    y: -(options.height + 100),
+    x: x,
+    y: y,
     width: options.width,
     height: options.height,
     show: options.show || false,
@@ -28,7 +32,9 @@ module.exports = function (options, callback) {
   });
 
   // Workaround for https://github.com/atom/electron/issues/2610
-  popupWindow.showInactive();
+  if (process.env.NODESCREENSHOT_SHOW !== '1') {
+    popupWindow.showInactive();
+  }
 
   var cleanup = function () {
     setTimeout(function () {
