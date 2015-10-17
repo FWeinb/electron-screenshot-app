@@ -14,8 +14,8 @@
   "repository": "https://github.com/FWeinb/electron-screenshot-app",
   "license": "MIT",
   "devDependencies": {
-    "electron-mocha": "^0.2.1",
-    "electron-prebuilt": "0.33.8",
+    "electron-mocha": "^0.4.0",
+    "electron-prebuilt": "0.34.0",
     "eslint": "^0.24.1",
     "is-png": "^1.0.0",
     "pngparse": "^2.0.1"
