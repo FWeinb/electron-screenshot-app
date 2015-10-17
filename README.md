@@ -125,6 +125,11 @@ serious security issues.
 
 # Changelog
 
+
+##### `1.1.2`
+
+* Improve workaround introduced in `1.1.1`
+
 ##### `1.1.1`
 
 * Add workaround for electron issue [#2510](https://github.com/atom/electron/issues/2610) in electron >= 0.30.6 on a Mac 
