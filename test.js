@@ -80,8 +80,8 @@ describe('Screenshot', function () {
   it('should inject custom css', function (done) {
     screenshot({
       url: 'about:blank',
-      width: 1024,
-      height: 768
+      width: 600,
+      height: 500
     },
    function (err, image, cleanup) {
       assert.equal(err, undefined);
@@ -90,8 +90,8 @@ describe('Screenshot', function () {
 
         // Should be transparent
         assert.equal(pixels.channels, 4);
-        assert.equal(pixels.width, 1024 * image.size.devicePixelRatio);
-        assert.equal(pixels.height, 768 * image.size.devicePixelRatio);
+        assert.equal(pixels.width, 600 * image.size.devicePixelRatio);
+        assert.equal(pixels.height, 500 * image.size.devicePixelRatio);
 
         // Should be red + half transparent
         assert.equal(pixels.data[0], 255);
