@@ -6,7 +6,7 @@
 ## Install
 
 ```sh
-$ npm install electron-screenshot-app --save 
+$ npm install electron-screenshot-app --save
 ```
 
 
@@ -118,13 +118,16 @@ This will try to capture the whole page. `width` and `height` are considered the
 Type: `Boolean`
 Default: `false`
 
-This will enable node integration in the electron window, be carefull because this can open up some 
+This will enable node integration in the electron window, be careful because this can open up some
 serious security issues.
 
 
 
 # Changelog
 
+##### `2.0.0`
+
+* Update to `electron@0.36.5`
 
 ##### `1.1.2`
 
@@ -132,7 +135,7 @@ serious security issues.
 
 ##### `1.1.1`
 
-* Add workaround for electron issue [#2510](https://github.com/atom/electron/issues/2610) in electron >= 0.30.6 on a Mac 
+* Add workaround for electron issue [#2510](https://github.com/atom/electron/issues/2610) in electron >= 0.30.6 on a Mac
 
 ##### `1.1.0`
 
