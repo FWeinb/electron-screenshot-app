@@ -125,6 +125,11 @@ serious security issues.
 
 # Changelog
 
+##### `2.1.0`
+
+* Update to `electron@0.36.6`
+* Allow all [options](http://electron.atom.io/docs/v0.36.5/api/browser-window/#new-browserwindow-options) to be passed to electron
+
 ##### `2.0.0`
 
 * Update to `electron@0.36.5`

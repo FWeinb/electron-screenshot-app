@@ -3,27 +3,34 @@
 const BrowserWindow = require('electron').BrowserWindow;
 const ipcMain = require('electron').ipcMain;
 const path = require('path');
+const objectAssign = require('object-assign');
 
 module.exports = function (options, callback) {
 	if (process.env.NODESCREENSHOT_SHOW === '1') {
 		options.show = true;
 	}
 
-	let popupWindow = new BrowserWindow({
-		x: 0,
-		y: 0,
-		width: options.width,
-		height: options.height,
-		show: options.show || false,
-		frame: false,
-		// Used to load the ipc module into $$electronIpc`
-		preload: path.join(__dirname, 'preload.js'),
-		nodeIntegration: options.nodeIntegration || false,
-		transparent: options.transparent || false,
-		enableLargerThanScreen: true,
-		skipTaskbar: true,
-		directWrite: true
-	});
+	let popupWindow = new BrowserWindow(objectAssign(
+		// Defaults
+		{
+			show: false,
+			nodeIntegration: false,
+			transparent: false
+		},
+		// User values
+		options,
+		// Force these values
+		{
+			x: 0,
+			y: 0,
+			frame: false,
+			enableLargerThanScreen: true,
+			skipTaskbar: true,
+			directWrite: true,
+			// Used to load the ipc module into $$electronIpc`
+			preload: path.join(__dirname, 'preload.js')
+		})
+	);
 
 	const cleanup = () => {
 		popupWindow.removeAllListeners();

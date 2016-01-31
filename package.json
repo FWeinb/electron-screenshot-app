@@ -1,6 +1,6 @@
 {
   "name": "electron-screenshot-app",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "electron module to create screenshots",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron-mocha": "^0.8.0",
-    "electron-prebuilt": "0.36.5",
+    "electron-prebuilt": "0.36.6",
     "xo": "^0.12.0",
     "is-png": "^1.0.0",
     "pngparse": "^2.0.1"
@@ -25,5 +25,8 @@
     "envs": [
       "browser"
     ]
+  },
+  "dependencies": {
+    "object-assign": "^4.0.1"
   }
 }
