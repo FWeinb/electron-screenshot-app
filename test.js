@@ -13,11 +13,12 @@ describe('Screenshot', () => {
 			width: 500,
 			height: 500
 		},
-		(err, image) => {
+		(err, image, cleanup) => {
 			assert.equal(err, undefined);
 			assert(isPng(image.data));
 			assert.equal(image.size.width, 500 * image.size.devicePixelRatio);
 			assert.equal(image.size.height, 500 * image.size.devicePixelRatio);
+			//cleanup();
 			done();
 		});
 	});
@@ -104,22 +105,6 @@ describe('Screenshot', () => {
 		});
 	});
 
-	it('should take a screenshot when custom loaded event is triggered', done => {
-		screenshot({
-			url: 'data:text/html;base64,PGh0bWw+CjxoZWFkPgo8L2hlYWQ+Cjxib2R5Pgo8L2JvZHk+CjxzY3JpcHQ+CndpbmRvdy5vbmxvYWQgPSBmdW5jdGlvbigpIHsKICAgIHNldFRpbWVvdXQoIGZ1bmN0aW9uICgpIHsKICAgICAgICB2YXIgZXZ0ID0gZG9jdW1lbnQuY3JlYXRlRXZlbnQoIkV2ZW50Iik7CiAgICAgICAgZXZ0LmluaXRFdmVudCgiY3VzdC1sb2FkZWQiLHRydWUsdHJ1ZSk7CiAgICAgICAgZG9jdW1lbnQuZGlzcGF0Y2hFdmVudChldnQpOwogICAgICAgIGNvbnNvbGUubG9nKCdjdXN0LWxvYWRlZCBldmVudCBzZW50Jyk7CiAgICB9LDIwMCk7Cn07Cjwvc2NyaXB0Pgo8L2h0bWw+',
-			loadevent: 'cust-loaded',
-			width: 500,
-			height: 500
-		},
-		(err, image) => {
-			assert.equal(err, undefined);
-			assert(isPng(image.data));
-			assert.equal(image.size.width, 500 * image.size.devicePixelRatio);
-			assert.equal(image.size.height, 500 * image.size.devicePixelRatio);
-			done();
-		});
-	});
-
 	it('should throw an error', done => {
 		screenshot({
 			url: 'http://thiswillnotbeadomain.nonono/'
@@ -129,4 +114,22 @@ describe('Screenshot', () => {
 			done();
 		});
 	});
+
+	it('should take a screenshot when custom loaded event is triggered', done => {
+		screenshot({
+			url: 'data:text/html;base64,PGh0bWw+CjxoZWFkPgo8L2hlYWQ+Cjxib2R5Pgo8L2JvZHk+CjxzY3JpcHQ+CndpbmRvdy5vbmxvYWQgPSBmdW5jdGlvbigpIHsKICAgIHNldFRpbWVvdXQoIGZ1bmN0aW9uICgpIHsKICAgICAgICB2YXIgZXZ0ID0gZG9jdW1lbnQuY3JlYXRlRXZlbnQoIkV2ZW50Iik7CiAgICAgICAgZXZ0LmluaXRFdmVudCgiY3VzdC1sb2FkZWQiLHRydWUsdHJ1ZSk7CiAgICAgICAgZG9jdW1lbnQuZGlzcGF0Y2hFdmVudChldnQpOwogICAgICAgIGNvbnNvbGUubG9nKCdjdXN0LWxvYWRlZCBldmVudCBzZW50Jyk7CiAgICB9LDIwMCk7Cn07Cjwvc2NyaXB0Pgo8L2h0bWw+',
+			loadevent: 'cust-loaded',
+			width: 500,
+			height: 500
+		},
+		(err, image, cleanup) => {
+			assert.equal(err, undefined);
+			assert(isPng(image.data));
+			assert.equal(image.size.width, 500 * image.size.devicePixelRatio);
+			assert.equal(image.size.height, 500 * image.size.devicePixelRatio);
+			cleanup();
+			done();
+		});
+	});
+
 });
