@@ -28,7 +28,11 @@ module.exports = function (options, callback) {
 			skipTaskbar: true,
 			directWrite: true,
 			// Used to load the ipc module into $$electronIpc`
-			preload: path.join(__dirname, 'preload.js')
+			preload: path.join(__dirname, 'preload.js'),
+			webPreferences: {
+				webSecurity: false,
+				defaultEncoding: 'utf-8'
+			}
 		})
 	);
 
@@ -54,10 +58,13 @@ module.exports = function (options, callback) {
 		clearTimeout(loadTimeout);
 
 		const loadEvent = `Loaded-${popupWindow.id}`;
+		const custloadEvent = `CustLoaded-${popupWindow.id}`;
 		const sizeEvent = `Size-${popupWindow.id}`;
 
+		const loadEventName = (options.loadevent) ? custloadEvent : loadEvent;
+
 		// Register the IPC load event once
-		ipcMain.once(loadEvent, (e, meta) => {
+		ipcMain.once(loadEventName, (e, meta) => {
 			// Delay the screenshot
 			setTimeout(() => {
 				const cb = data => {
@@ -102,7 +109,10 @@ module.exports = function (options, callback) {
 					document.body.scrollTop=' + (options.pageOffset || 0) + ';
 					$$electron__ra($$electron__load);
 				});
-			}`);
+			}
+            document.addEventListener("${options.loadevent}", function() {
+			   $$electronIpc.send("${custloadEvent}", { devicePixelRatio: window.devicePixelRatio });
+			});`);
 
 		if (options.page) {
 			popupWindow.webContents.executeJavaScript('window["$$electron__size"]()');
