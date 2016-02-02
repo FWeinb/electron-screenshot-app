@@ -24,24 +24,6 @@ describe('Screenshot', () => {
 		});
 	});
 
-	it('should take a jpeg screenshot', done => {
-		screenshot({
-			url: 'about:blank',
-			format: 'jpeg',
-			quality: 100,
-			width: 500,
-			height: 500
-		},
-		(err, image, cleanup) => {
-			assert.equal(err, undefined);
-			assert(isJpg(image.data));
-			assert.equal(image.size.width, 500 * image.size.devicePixelRatio);
-			assert.equal(image.size.height, 500 * image.size.devicePixelRatio);
-			cleanup();
-			done();
-		});
-	});
-
 	it('should have a `delay` option', done => {
 		const past = new Date();
 		screenshot({
@@ -145,6 +127,24 @@ describe('Screenshot', () => {
 		(err, image, cleanup) => {
 			assert.equal(err, undefined);
 			assert(isPng(image.data));
+			assert.equal(image.size.width, 500 * image.size.devicePixelRatio);
+			assert.equal(image.size.height, 500 * image.size.devicePixelRatio);
+			cleanup();
+			done();
+		});
+	});
+
+	it('should take a jpeg screenshot', done => {
+		screenshot({
+			url: 'about:blank',
+			format: 'jpeg',
+			quality: 100,
+			width: 500,
+			height: 500
+		},
+		(err, image, cleanup) => {
+			assert.equal(err, undefined);
+			assert(isJpg(image.data));
 			assert.equal(image.size.width, 500 * image.size.devicePixelRatio);
 			assert.equal(image.size.height, 500 * image.size.devicePixelRatio);
 			cleanup();
