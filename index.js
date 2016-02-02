@@ -69,7 +69,7 @@ module.exports = function (options, callback) {
 			setTimeout(() => {
 				const cb = data => {
 					const obj = {
-						data: data.toPng(),
+						data: ((options.format == 'jpeg') ? data.toJpeg( (options.quality ? options.quality : 80) ) : data.toPng()),
 						size: data.getSize()
 					};
 

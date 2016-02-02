@@ -4,10 +4,11 @@
 const assert = require('assert');
 const screenshot = require('./index');
 const isPng = require('is-png');
+const isJpg = require('is-jpg');
 const pngparse = require('pngparse');
 
 describe('Screenshot', () => {
-	it('should take a screenshot', done => {
+	it('should take a png screenshot', done => {
 		screenshot({
 			url: 'about:blank',
 			width: 500,
@@ -22,6 +23,25 @@ describe('Screenshot', () => {
 			done();
 		});
 	});
+
+	it('should take a jpeg screenshot', done => {
+		screenshot({
+			url: 'about:blank',
+			format: 'jpeg',
+			quality: 100,
+			width: 500,
+			height: 500
+		},
+		(err, image, cleanup) => {
+			assert.equal(err, undefined);
+			assert(isJpg(image.data));
+			assert.equal(image.size.width, 500 * image.size.devicePixelRatio);
+			assert.equal(image.size.height, 500 * image.size.devicePixelRatio);
+			cleanup();
+			done();
+		});
+	});
+
 	it('should have a `delay` option', done => {
 		const past = new Date();
 		screenshot({
