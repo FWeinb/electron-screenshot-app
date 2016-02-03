@@ -30,7 +30,7 @@ module.exports = function (options, callback) {
 			// Used to load the ipc module into $$electronIpc`
 			preload: path.join(__dirname, 'preload.js'),
 			webPreferences: {
-				webSecurity: false,
+				webSecurity:  (options.security === undefined || options.security === true),
 				defaultEncoding: 'utf-8'
 			}
 		})
@@ -58,7 +58,7 @@ module.exports = function (options, callback) {
 		clearTimeout(loadTimeout);
 
 		const loadEvent = `Loaded-${popupWindow.id}`;
-		const custloadEvent = `CustLoaded-${popupWindow.id}`;
+		const custloadEvent = `CustomLoaded-${popupWindow.id}`;
 		const sizeEvent = `Size-${popupWindow.id}`;
 
 		const loadEventName = (options.loadevent) ? custloadEvent : loadEvent;
@@ -111,7 +111,10 @@ module.exports = function (options, callback) {
 				});
 			}
             document.addEventListener("${options.loadevent}", function() {
-			   $$electronIpc.send("${custloadEvent}", { devicePixelRatio: window.devicePixelRatio });
+                document.body.scrollTop=' + (options.pageOffset || 0) + ';
+			    $$electron__ra(function(){
+				   $$electronIpc.send("${custloadEvent}", { devicePixelRatio: window.devicePixelRatio });
+				});
 			});`);
 
 		if (options.page) {
