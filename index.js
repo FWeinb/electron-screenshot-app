@@ -28,7 +28,11 @@ module.exports = function (options, callback) {
 			skipTaskbar: true,
 			directWrite: true,
 			// Used to load the ipc module into $$electronIpc`
-			preload: path.join(__dirname, 'preload.js')
+			preload: path.join(__dirname, 'preload.js'),
+			webPreferences: {
+				webSecurity:  (options.security === undefined || options.security === true),
+				defaultEncoding: 'utf-8'
+			}
 		})
 	);
 
@@ -54,15 +58,18 @@ module.exports = function (options, callback) {
 		clearTimeout(loadTimeout);
 
 		const loadEvent = `Loaded-${popupWindow.id}`;
+		const custloadEvent = `CustomLoaded-${popupWindow.id}`;
 		const sizeEvent = `Size-${popupWindow.id}`;
 
+		const loadEventName = (options.loadevent) ? custloadEvent : loadEvent;
+
 		// Register the IPC load event once
-		ipcMain.once(loadEvent, (e, meta) => {
+		ipcMain.once(loadEventName, (e, meta) => {
 			// Delay the screenshot
 			setTimeout(() => {
 				const cb = data => {
 					const obj = {
-						data: data.toPng(),
+						data: ((options.format == 'jpeg') ? data.toJpeg( (options.quality ? options.quality : 80) ) : data.toPng()),
 						size: data.getSize()
 					};
 
@@ -102,7 +109,13 @@ module.exports = function (options, callback) {
 					document.body.scrollTop=' + (options.pageOffset || 0) + ';
 					$$electron__ra($$electron__load);
 				});
-			}`);
+			}
+            document.addEventListener("${options.loadevent}", function() {
+                document.body.scrollTop=' + (options.pageOffset || 0) + ';
+			    $$electron__ra(function(){
+				   $$electronIpc.send("${custloadEvent}", { devicePixelRatio: window.devicePixelRatio });
+				});
+			});`);
 
 		if (options.page) {
 			popupWindow.webContents.executeJavaScript('window["$$electron__size"]()');

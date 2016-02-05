@@ -121,6 +121,40 @@ Default: `false`
 This will enable node integration in the electron window, be careful because this can open up some
 serious security issues.
 
+##### secure
+
+Type: `Boolean`
+Default: `true`
+
+This will enable/disable web security in the electron window.
+
+##### loadevent
+
+Type: `String`
+Default: `undefined`
+
+The name of a custom page side event which can be used to trigger the page capture. This can be useful for client heavy javascript sites which take much longer to initialise than the time take to load the DOM. Such sites can send an event in the following manner.
+
+```js
+    var evt = document.createEvent("Event");
+    evt.initEvent("cust-loaded",true,true);
+    document.dispatchEvent(evt);
+``` 
+
+##### format
+
+Type: `String`
+Default: `png`
+
+format to encode the image. only `'jpeg'` or `'png'` are supported
+
+##### quality
+
+Type: `number`
+Default: `80`
+
+If format is `'jpeg'`, defines the quality of the image '0-100'
+
 
 
 # Changelog
