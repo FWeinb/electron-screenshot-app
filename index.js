@@ -30,7 +30,7 @@ module.exports = function (options, callback) {
 			// Used to load the ipc module into $$electronIpc`
 			preload: path.join(__dirname, 'preload.js'),
 			webPreferences: {
-				webSecurity:  (options.security === undefined || options.security === true),
+				webSecurity: (options.security === undefined || options.security),
 				defaultEncoding: 'utf-8'
 			}
 		})
@@ -69,7 +69,7 @@ module.exports = function (options, callback) {
 			setTimeout(() => {
 				const cb = data => {
 					const obj = {
-						data: ((options.format == 'jpeg') ? data.toJpeg( (options.quality ? options.quality : 80) ) : data.toPng()),
+						data: ((options.format === 'jpeg') ? data.toJpeg((options.quality ? options.quality : 80)) : data.toPng()),
 						size: data.getSize()
 					};
 
