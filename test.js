@@ -19,11 +19,10 @@ describe('Screenshot', () => {
 			assert(isPng(image.data));
 			assert.equal(image.size.width, 500 * image.size.devicePixelRatio);
 			assert.equal(image.size.height, 500 * image.size.devicePixelRatio);
-			//cleanup();
+			cleanup();
 			done();
 		});
 	});
-
 	it('should have a `delay` option', done => {
 		const past = new Date();
 		screenshot({
@@ -151,5 +150,4 @@ describe('Screenshot', () => {
 			done();
 		});
 	});
-
 });
