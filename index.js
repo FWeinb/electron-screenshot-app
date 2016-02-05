@@ -40,11 +40,11 @@ module.exports = function (options, callback) {
 		popupWindow.removeAllListeners();
 		popupWindow.webContents.removeAllListeners();
 		setTimeout(() => {
-			setTimeout(() => {
-				popupWindow.close();
+			if (popupWindow) {
+				popupWindow.destroy();
 				popupWindow = null;
-			}, 0);
-		}, 0);
+			}
+		}, 100);
 	};
 
 	let loadTimeout;
