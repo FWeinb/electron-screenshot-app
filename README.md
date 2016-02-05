@@ -161,11 +161,12 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 ##### `2.2.0`
 
+* Update to `electron@0.36.7`
 * Add support for `jpeg` using the `format` option.
 * Add a custom [`loadevent`](#loadevent) that can be send by the page.
 * Make it possible to disable webSecurity via `secure` option.
 
-Thanks to [nealshail](https://github.com/nealshail) for these features. 
+Thanks to [nealshail](https://github.com/nealshail) for these features.
 
 ##### `2.1.0`
 
