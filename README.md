@@ -13,7 +13,7 @@ $ npm install electron-screenshot-app --save
 ## Usage
 
 ```js
-var app = require('app');
+var app = require('electron').app;
 var screenshot = require('electron-screenshot-app');
 
   app.on('ready', function(){
