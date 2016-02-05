@@ -139,7 +139,7 @@ The name of a custom page side event which can be used to trigger the page captu
     var evt = document.createEvent("Event");
     evt.initEvent("cust-loaded",true,true);
     document.dispatchEvent(evt);
-``` 
+```
 
 ##### format
 
@@ -158,6 +158,14 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 
 # Changelog
+
+##### `2.2.0`
+
+* Add support for `jpeg` using the `format` option.
+* Add a custom [`loadevent`](#loadevent) that can be send by the page.
+* Make it possible to disable webSecurity via `secure` option.
+
+Thanks to [nealshail](https://github.com/nealshail) for these features. 
 
 ##### `2.1.0`
 
