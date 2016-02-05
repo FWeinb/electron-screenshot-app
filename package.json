@@ -4,7 +4,7 @@
   "description": "electron module to create screenshots",
   "main": "index.js",
   "scripts": {
-    "test": "ELECTRON_PATH=`node -p \"require('electron-prebuilt')\"`; electron-mocha --timeout 10000 test.js"
+    "test": "xo *.js && (ELECTRON_PATH=`node -p \"require('electron-prebuilt')\"`; electron-mocha --timeout 10000 test.js)"
   },
   "keywords": [
     "electron",
