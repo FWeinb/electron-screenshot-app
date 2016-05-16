@@ -113,22 +113,7 @@ Default: `false`
 
 This will try to capture the whole page. `width` and `height` are considered the minimum size.
 
-##### nodeIntegration
-
-Type: `Boolean`
-Default: `false`
-
-This will enable node integration in the electron window, be careful because this can open up some
-serious security issues.
-
-##### secure
-
-Type: `Boolean`
-Default: `true`
-
-This will enable/disable web security in the electron window.
-
-##### loadevent
+##### loadEvent
 
 Type: `String`
 Default: `undefined`
@@ -159,11 +144,18 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 # Changelog
 
+##### `3.0.0`
+
+* Upgrade to `electron@1.1.0`
+* Change option name of `loadevent` to `loadEvent`
+* Removed `nodeIntegration`. Use `webPreferences.nodeIntegration` instead.
+* Removed `secure`. Use `webPreferences.webSecurity` instead
+
 ##### `2.2.0`
 
 * Update to `electron@0.36.7`
 * Add support for `jpeg` using the `format` option.
-* Add a custom [`loadevent`](#loadevent) that can be send by the page.
+* Add a custom [`loadevent`](#loadEvent) that can be send by the page.
 * Make it possible to disable webSecurity via `secure` option.
 
 Thanks to [nealshail](https://github.com/nealshail) for these features.
