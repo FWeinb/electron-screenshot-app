@@ -2,10 +2,11 @@
 /* globals it, describe */
 // Run in Electron
 const assert = require('assert');
-const screenshot = require('./index');
 const isPng = require('is-png');
 const isJpg = require('is-jpg');
 const pngparse = require('pngparse');
+
+const screenshot = require('./index');
 
 describe('Screenshot', () => {
 	it('should take a png screenshot', done => {
@@ -119,7 +120,7 @@ describe('Screenshot', () => {
 	it('should take a screenshot when custom loaded event is triggered', done => {
 		screenshot({
 			url: 'data:text/html;base64,PGh0bWw+CjxoZWFkPgo8L2hlYWQ+Cjxib2R5Pgo8L2JvZHk+CjxzY3JpcHQ+CndpbmRvdy5vbmxvYWQgPSBmdW5jdGlvbigpIHsKICAgIHNldFRpbWVvdXQoIGZ1bmN0aW9uICgpIHsKICAgICAgICB2YXIgZXZ0ID0gZG9jdW1lbnQuY3JlYXRlRXZlbnQoIkV2ZW50Iik7CiAgICAgICAgZXZ0LmluaXRFdmVudCgiY3VzdC1sb2FkZWQiLHRydWUsdHJ1ZSk7CiAgICAgICAgZG9jdW1lbnQuZGlzcGF0Y2hFdmVudChldnQpOwogICAgICAgIGNvbnNvbGUubG9nKCdjdXN0LWxvYWRlZCBldmVudCBzZW50Jyk7CiAgICB9LDIwMCk7Cn07Cjwvc2NyaXB0Pgo8L2h0bWw+',
-			loadevent: 'cust-loaded',
+			loadEvent: 'cust-loaded',
 			width: 500,
 			height: 500
 		},

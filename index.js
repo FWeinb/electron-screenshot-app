@@ -1,21 +1,22 @@
 'use strict';
 
-const BrowserWindow = require('electron').BrowserWindow;
-const ipcMain = require('electron').ipcMain;
-const path = require('path');
-const objectAssign = require('object-assign');
+const {join} = require('path');
+const {BrowserWindow, ipcMain} = require('electron');
 
 module.exports = function (options, callback) {
 	if (process.env.NODESCREENSHOT_SHOW === '1') {
 		options.show = true;
 	}
 
-	let popupWindow = new BrowserWindow(objectAssign(
+	let popupWindow = new BrowserWindow(Object.assign(
 		// Defaults
 		{
 			show: false,
-			nodeIntegration: false,
-			transparent: false
+			webPreferences: {
+				nodeIntegration: false
+			},
+			transparent: false,
+			backgroundThrottling: false
 		},
 		// User values
 		options,
@@ -28,10 +29,8 @@ module.exports = function (options, callback) {
 			skipTaskbar: true,
 			directWrite: true,
 			// Used to load the ipc module into $$electronIpc`
-			preload: path.join(__dirname, 'preload.js'),
 			webPreferences: {
-				webSecurity: (options.security === undefined || options.security),
-				defaultEncoding: 'utf-8'
+				preload: join(__dirname, 'preload.js')
 			}
 		})
 	);
@@ -110,10 +109,10 @@ module.exports = function (options, callback) {
 					$$electron__ra($$electron__load);
 				});
 			}
-            document.addEventListener("${options.loadevent}", function() {
-                document.body.scrollTop=' + (options.pageOffset || 0) + ';
-			    $$electron__ra(function(){
-				   $$electronIpc.send("${custloadEvent}", { devicePixelRatio: window.devicePixelRatio });
+			document.addEventListener("${options.loadEvent}", function() {
+				document.body.scrollTop=' + (options.pageOffset || 0) + ';
+					$$electron__ra(function(){
+					$$electronIpc.send("${custloadEvent}", { devicePixelRatio: window.devicePixelRatio });
 				});
 			});`);
 
