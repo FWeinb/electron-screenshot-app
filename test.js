@@ -49,8 +49,8 @@ describe('Screenshot', () => {
 		},
 		(err, image, cleanup) => {
 			assert.equal(err, undefined);
-			assert.equal(image.size.width, 600 * image.size.devicePixelRatio);
-			assert.equal(image.size.height, 600 * image.size.devicePixelRatio);
+			assert.equal(image.size.width, 608 * image.size.devicePixelRatio);
+			assert.equal(image.size.height, 616 * image.size.devicePixelRatio);
 			cleanup();
 			done();
 		});
