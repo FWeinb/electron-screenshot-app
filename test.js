@@ -112,7 +112,7 @@ describe('Screenshot', () => {
 			url: 'http://thiswillnotbeadomain.nonono/'
 		},
 		err => {
-			assert.equal(err.toString(), 'Error: [-105] ');
+			assert.equal(err.toString(), 'Error: [-105] ERR_NAME_NOT_RESOLVED');
 			done();
 		});
 	});

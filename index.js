@@ -97,9 +97,9 @@ module.exports = function (options, callback) {
 		popupWindow.webContents.executeJavaScript(`
 			var $$electron__ra = window.requestAnimationFrame;
 			function $$electron__load(){$$electronIpc.send("${loadEvent}", { devicePixelRatio: window.devicePixelRatio });};
-			function $$electron__size(){var w = window,d = document,e = d.documentElement,g = d.body,
-			width = Math.max(w.innerWidth, e.clientWidth, g.clientWidth),
-			height = Math.max(w.innerHeight, e.clientHeight, g.clientHeight);
+			function $$electron__size(){var d = document.body,dd = document.documentElement,
+			width = Math.max(d.scrollWidth, d.offsetWidth, dd.clientWidth, dd.scrollWidth, dd.offsetWidth),
+			height = Math.max(d.scrollHeight, d.offsetHeight, dd.clientHeight, dd.scrollHeight, dd.offsetHeight);
 			$$electronIpc.send("${sizeEvent}",{width: width, height: height});
 			};
 			function $$electron__loaded(){
