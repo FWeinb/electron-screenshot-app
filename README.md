@@ -144,6 +144,10 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 # Changelog
 
+##### `3.0.2`
+
+* Fix a bug in correctly merging `nodeIntegration: false`.
+
 ##### `3.0.1`
 
 * Improve `page` size detection.

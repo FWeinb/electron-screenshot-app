@@ -2,13 +2,14 @@
 
 const {join} = require('path');
 const {BrowserWindow, ipcMain} = require('electron');
+const deepAssign = require('deep-assign');
 
 module.exports = function (options, callback) {
 	if (process.env.NODESCREENSHOT_SHOW === '1') {
 		options.show = true;
 	}
 
-	let popupWindow = new BrowserWindow(Object.assign(
+	let popupWindow = new BrowserWindow(deepAssign(
 		// Defaults
 		{
 			show: false,

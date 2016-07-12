@@ -81,8 +81,8 @@ describe('Screenshot', () => {
 	it('should inject custom css', done => {
 		screenshot({
 			url: 'about:blank',
-			width: 600,
-			height: 500,
+			width: 1,
+			height: 1,
 			transparent: true,
 			css: 'html,body{background:rgba(255,0,0,0.5)}'
 		},
@@ -92,8 +92,8 @@ describe('Screenshot', () => {
 				assert.equal(err, undefined);
 				// Should be transparent
 				assert.equal(pixels.channels, 4);
-				assert.equal(pixels.width, 600 * image.size.devicePixelRatio);
-				assert.equal(pixels.height, 500 * image.size.devicePixelRatio);
+				assert.equal(pixels.width, image.size.devicePixelRatio);
+				assert.equal(pixels.height, image.size.devicePixelRatio);
 
 				// Should be red + half transparent
 				assert.equal(pixels.data[0], 255);
@@ -114,6 +114,51 @@ describe('Screenshot', () => {
 		err => {
 			assert.equal(err.toString(), 'Error: [-105] ERR_NAME_NOT_RESOLVED');
 			done();
+		});
+	});
+
+	it('should not run in commonjs (nodeIntegration) mode by default', done => {
+		screenshot({
+			url: 'data:text/html;charset=utf-8,<script>let c= (window.module || window.require) ? "rgb(255,0,0)" : "rgb(255,255,255)"; document.write("<style>html,body{background:"+c+";}</style>") </script>',
+			width: 1,
+			height: 1
+		},
+		(err, image, cleanup) => {
+			assert.equal(err, undefined);
+			pngparse.parse(image.data, (err, pixels) => {
+				assert.equal(err, undefined);
+				// Should be white
+				assert.equal(pixels.data[0], 255);
+				assert.equal(pixels.data[1], 255);
+				assert.equal(pixels.data[2], 255);
+				assert.equal(pixels.data[3], 255);
+				cleanup();
+				done();
+			});
+		});
+	});
+
+	it('should run in commonjs (nodeIntegration) mode when asked for', done => {
+		screenshot({
+			url: 'data:text/html;charset=utf-8,<script>let c= (window.module || window.require) ? "rgb(255,0,0)" : "rgb(255,255,255)"; document.write("<style>html,body{background:"+c+";}</style>") </script>',
+			width: 1,
+			height: 1,
+			webPreferences: {
+				nodeIntegration: true
+			}
+		},
+		(err, image, cleanup) => {
+			assert.equal(err, undefined);
+			pngparse.parse(image.data, (err, pixels) => {
+				assert.equal(err, undefined);
+				// Should be white
+				assert.equal(pixels.data[0], 255);
+				assert.equal(pixels.data[1], 0);
+				assert.equal(pixels.data[2], 0);
+				assert.equal(pixels.data[3], 255);
+				cleanup();
+				done();
+			});
 		});
 	});
 
