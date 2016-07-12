@@ -98,6 +98,30 @@ Default: `undefined`
 
 This css will be injected into the page before the screenshot is taken.
 
+##### js
+
+Type: `String` || `Function`  
+Default: `undefined`
+
+This is either a `String` or a `Function`. If it is a `String` it must contain a
+function definition that takes on parameter e.g.
+```js
+js: 'function(takeScreenshot){ /*Do some stuff*/ takeScreenshot();}'
+```
+or
+```js
+js: 'takeScreenshot => { /*Do some stuff*/ takeScreenshot();}'
+```
+
+If it is a function you can just add it like:
+```js
+js: function(takeScreenshot){ /*Do some stuff*/ takeScreenshot();}
+```
+or
+```js
+js: (takeScreenshot) => { /*Do some stuff*/ takeScreenshot();}
+```
+
 ##### transparent
 
 Type: `Boolean`  
@@ -143,6 +167,10 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 
 # Changelog
+
+##### `3.1.0`
+
+* Add support for specifying `options.js` to contain a JS function that will be executed.
 
 ##### `3.0.2`
 
