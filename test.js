@@ -179,6 +179,31 @@ describe('Screenshot', () => {
 		});
 	});
 
+	it('should run the javascript and take a screenshot when called.', done => {
+		screenshot({
+			url: 'about:blank',
+			height: 1,
+			width: 1,
+			js: takeScreenshot => {
+				document.querySelector('html').style.background = 'rgb(0,255,0)';
+				takeScreenshot();
+			}
+		},
+		(err, image, cleanup) => {
+			assert.equal(err, undefined);
+			pngparse.parse(image.data, (err, pixels) => {
+				assert.equal(err, undefined);
+				// Should be white
+				assert.equal(pixels.data[0], 0);
+				assert.equal(pixels.data[1], 255);
+				assert.equal(pixels.data[2], 0);
+				assert.equal(pixels.data[3], 255);
+				cleanup();
+				done();
+			});
+		});
+	});
+
 	it('should take a jpeg screenshot', done => {
 		screenshot({
 			url: 'about:blank',

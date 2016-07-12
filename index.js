@@ -1,6 +1,7 @@
 'use strict';
 
 const {join} = require('path');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const {BrowserWindow, ipcMain} = require('electron');
 const deepAssign = require('deep-assign');
 
@@ -117,7 +118,13 @@ module.exports = function (options, callback) {
 				});
 			});`);
 
-		if (options.page) {
+		if (options.js !== undefined) {
+			// Wrap js code in a function and make `parameter` an alias of
+			// either $$electron__loaded or $$electron__size depending on if options.page
+			// is specified
+			const parameter = options.page ? '$$electron__page' : '$$electron__loaded';
+			popupWindow.webContents.executeJavaScript(`(${options.js.toString()})(${parameter})`);
+		} else if (options.page) {
 			popupWindow.webContents.executeJavaScript('window["$$electron__size"]()');
 		} else {
 			popupWindow.webContents.executeJavaScript('window["$$electron__loaded"]()');
@@ -138,12 +145,12 @@ module.exports = function (options, callback) {
 		cleanup();
 	});
 
-	if (options.css !== undefined) {
-		popupWindow.webContents.on('dom-ready', () => {
-			// Inject custom CSS if necessary
+	popupWindow.webContents.on('dom-ready', () => {
+		// Inject custom CSS if necessary
+		if (options.css !== undefined) {
 			popupWindow.webContents.insertCSS(options.css);
-		});
-	}
+		}
+	});
 
 	let asked = false;
 	popupWindow.webContents.on('did-stop-loading', () => {
