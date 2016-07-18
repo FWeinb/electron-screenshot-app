@@ -168,6 +168,10 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 # Changelog
 
+##### `3.1.1`
+
+* Fix screenshot bug on windows. See [here](https://github.com/FWeinb/electron-screenshot-service/issues/24).
+
 ##### `3.1.0`
 
 * Add support for specifying `options.js` to contain a JS function that will be executed.
