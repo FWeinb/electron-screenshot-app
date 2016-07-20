@@ -59,7 +59,9 @@ module.exports = function (options, callback) {
 		clearTimeout(loadTimeout);
 
 		// Only run when there is a popupWindow
-		if (popupWindow === null || popupWindow === undefined) return;
+		if (popupWindow === null || popupWindow === undefined) {
+			return;
+		}
 
 		const loadEvent = `Loaded-${popupWindow.id}`;
 		const custloadEvent = `CustomLoaded-${popupWindow.id}`;
