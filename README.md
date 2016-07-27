@@ -168,6 +168,11 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 # Changelog
 
+##### `4.0.0`
+
+* Use [`view-painted`](https://github.com/electron/electron/pull/6524) Event instead of `requestAnimationFrame` hack.
+* Update to `electron@1.3.1`
+
 ##### `3.1.1`
 
 * Fix screenshot bug on windows. See [here](https://github.com/FWeinb/electron-screenshot-service/issues/24).

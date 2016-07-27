@@ -63,33 +63,37 @@ module.exports = function (options, callback) {
 			return;
 		}
 
-		const loadEvent = `Loaded-${popupWindow.id}`;
-		const custloadEvent = `CustomLoaded-${popupWindow.id}`;
 		const sizeEvent = `Size-${popupWindow.id}`;
-
-		const loadEventName = (options.loadevent) ? custloadEvent : loadEvent;
+		const loadEvent = options.loadevent || `Loaded-${popupWindow.id}`;
 
 		// Register the IPC load event once
-		ipcMain.once(loadEventName, (e, meta) => {
-			// Delay the screenshot
-			setTimeout(() => {
-				const cb = data => {
+		ipcMain.once(loadEvent, (e, meta) => {
+			popupWindow.webContents.once('view-painted', () => {
+				function capture(data) {
+					// It is possible that we don't get a valid
+					// screenshot here (electron@1.3.1) just try it again.
+					if (data.isEmpty()) {
+						return setTimeout(take, 0);
+					}
 					const obj = {
-						data: ((options.format === 'jpeg') ? data.toJpeg((options.quality ? options.quality : 80)) : data.toPng()),
+						data: ((options.format === 'jpeg') ? data.toJpeg(options.quality || 80) : data.toPng()),
 						size: data.getSize()
 					};
-
 					obj.size.devicePixelRatio = meta.devicePixelRatio;
-
 					callback(undefined, obj, cleanup);
-				};
-
-				if (typeof options.crop === 'object') {
-					popupWindow.capturePage(options.crop, cb);
-				} else {
-					popupWindow.capturePage(cb);
 				}
-			}, options.delay);
+
+				function take() {
+					if (typeof options.crop === 'object') {
+						popupWindow.capturePage(options.crop, capture);
+					} else {
+						popupWindow.capturePage(capture);
+					}
+				}
+				// Delay the screenshot
+				setTimeout(take, options.delay);
+			});
+			e.returnValue = true;
 		});
 
 		// Register the IPC sizeEvent once
@@ -99,35 +103,33 @@ module.exports = function (options, callback) {
 			popupWindow.webContents.executeJavaScript('window["$$electron__loaded"]()');
 		});
 
-		// requestAnimationFrame will call the function before the next repaint.
-		// This way it is ensured that at least on paint has happend.
+		// Read the width/height of the page and trigger screenshot
 		popupWindow.webContents.executeJavaScript(`
-			var $$electron__ra = window.requestAnimationFrame;
-			function $$electron__load(){$$electronIpc.send("${loadEvent}", { devicePixelRatio: window.devicePixelRatio });};
-			function $$electron__size(){var d = document.body,dd = document.documentElement,
-			width = Math.max(d.scrollWidth, d.offsetWidth, dd.clientWidth, dd.scrollWidth, dd.offsetWidth),
-			height = Math.max(d.scrollHeight, d.offsetHeight, dd.clientHeight, dd.scrollHeight, dd.offsetHeight);
-			$$electronIpc.send("${sizeEvent}",{width: width, height: height});
-			};
-			function $$electron__loaded(){
-				$$electron__ra(function(){
-					// Take screenshot at offset
-					document.body.scrollTop=' + (options.pageOffset || 0) + ';
-					$$electron__ra($$electron__load);
-				});
+			function $$electron__repaint(){
+				var disp = document.body.style.display;
+				document.body.style.display = 'none';
+				document.body.offsetHeight;
+				document.body.style.display = disp;
 			}
-			document.addEventListener("${options.loadEvent}", function() {
-				document.body.scrollTop=' + (options.pageOffset || 0) + ';
-					$$electron__ra(function(){
-					$$electronIpc.send("${custloadEvent}", { devicePixelRatio: window.devicePixelRatio });
-				});
-			});`);
+			function $$electron__loaded(){
+				document.body.scrollTop=${options.pageOffset || 0};
+				$$electronIpc.sendSync("${loadEvent}", { devicePixelRatio: window.devicePixelRatio });
+				$$electron__repaint();
+			};
+			function $$electron__size(){
+				var d = document.body,dd = document.documentElement,
+				width = Math.max(d.scrollWidth, d.offsetWidth, dd.clientWidth, dd.scrollWidth, dd.offsetWidth),
+				height = Math.max(d.scrollHeight, d.offsetHeight, dd.clientHeight, dd.scrollHeight, dd.offsetHeight);
+				$$electronIpc.send("${sizeEvent}",{width, height});
+			};
+			document.addEventListener("${loadEvent}", $$electron__loaded);
+		`);
 
 		if (options.js !== undefined) {
 			// Wrap js code in a function and make `parameter` an alias of
 			// either $$electron__loaded or $$electron__size depending on if options.page
 			// is specified
-			const parameter = options.page ? '$$electron__page' : '$$electron__loaded';
+			const parameter = options.page ? '$$electron__size' : '$$electron__loaded';
 			popupWindow.webContents.executeJavaScript(`(${options.js.toString()})(${parameter})`);
 		} else if (options.page) {
 			popupWindow.webContents.executeJavaScript('window["$$electron__size"]()');
