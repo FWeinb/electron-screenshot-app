@@ -84,7 +84,7 @@ describe('Screenshot', () => {
 			width: 1,
 			height: 1,
 			transparent: true,
-			css: 'html,body{background:rgba(255,0,0,0.5)}'
+			css: 'html,body{background:rgba(255,0,0,1)}'
 		},
 		(err, image, cleanup) => {
 			assert.equal(err, undefined);
@@ -99,7 +99,7 @@ describe('Screenshot', () => {
 				assert.equal(pixels.data[0], 255);
 				assert.equal(pixels.data[1], 0);
 				assert.equal(pixels.data[2], 0);
-				assert.equal(pixels.data[3], 127);
+				assert.equal(pixels.data[3], 255);
 
 				cleanup();
 				done();
