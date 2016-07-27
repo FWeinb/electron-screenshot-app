@@ -26,6 +26,7 @@ module.exports = function (options, callback) {
 		{
 			x: 0,
 			y: 0,
+			useContentSize: true,
 			frame: false,
 			enableLargerThanScreen: true,
 			skipTaskbar: true,
