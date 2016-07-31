@@ -168,9 +168,14 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 # Changelog
 
+##### `4.0.1`
+
+* Update to `electron@1.3.1`
+
+
 ##### `4.0.0`
 
-* Use [`view-painted`](https://github.com/electron/electron/pull/6524) Event instead of `requestAnimationFrame` hack.
+* <s>Use [`view-painted`](https://github.com/electron/electron/pull/6524) Event instead of `requestAnimationFrame` hack.</s>
 * Update to `electron@1.3.1`
 
 ##### `3.1.1`
