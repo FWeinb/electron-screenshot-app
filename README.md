@@ -168,6 +168,10 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 # Changelog
 
+##### `4.0.2`
+
+* Fixed a bug where the wrong function was passed to the javascript function. ([#8](https://github.com/FWeinb/electron-screenshot-app/pull/8))
+
 ##### `4.0.1`
 
 * Update to `electron@1.3.1`
