@@ -125,7 +125,7 @@ module.exports = function (options, callback) {
 			// Wrap js code in a function and make `parameter` an alias of
 			// either $$electron__loaded or $$electron__size depending on if options.page
 			// is specified
-			const parameter = options.page ? '$$electron__page' : '$$electron__loaded';
+			const parameter = options.page ? '$$electron__size' : '$$electron__loaded';
 			popupWindow.webContents.executeJavaScript(`(${options.js.toString()})(${parameter})`);
 		} else if (options.page) {
 			popupWindow.webContents.executeJavaScript('window["$$electron__size"]()');
