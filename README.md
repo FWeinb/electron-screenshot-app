@@ -13,7 +13,7 @@ $ npm install electron-screenshot-app --save
 ## Usage
 
 ```js
-var app = require('app');
+var app = require('electron').app;
 var screenshot = require('electron-screenshot-app');
 
   app.on('ready', function(){
@@ -98,6 +98,30 @@ Default: `undefined`
 
 This css will be injected into the page before the screenshot is taken.
 
+##### js
+
+Type: `String` || `Function`  
+Default: `undefined`
+
+This is either a `String` or a `Function`. If it is a `String` it must contain a
+function definition that takes on parameter e.g.
+```js
+js: 'function(takeScreenshot){ /*Do some stuff*/ takeScreenshot();}'
+```
+or
+```js
+js: 'takeScreenshot => { /*Do some stuff*/ takeScreenshot();}'
+```
+
+If it is a function you can just add it like:
+```js
+js: function(takeScreenshot){ /*Do some stuff*/ takeScreenshot();}
+```
+or
+```js
+js: (takeScreenshot) => { /*Do some stuff*/ takeScreenshot();}
+```
+
 ##### transparent
 
 Type: `Boolean`  
@@ -113,22 +137,7 @@ Default: `false`
 
 This will try to capture the whole page. `width` and `height` are considered the minimum size.
 
-##### nodeIntegration
-
-Type: `Boolean`
-Default: `false`
-
-This will enable node integration in the electron window, be careful because this can open up some
-serious security issues.
-
-##### secure
-
-Type: `Boolean`
-Default: `true`
-
-This will enable/disable web security in the electron window.
-
-##### loadevent
+##### loadEvent
 
 Type: `String`
 Default: `undefined`
@@ -139,7 +148,7 @@ The name of a custom page side event which can be used to trigger the page captu
     var evt = document.createEvent("Event");
     evt.initEvent("cust-loaded",true,true);
     document.dispatchEvent(evt);
-``` 
+```
 
 ##### format
 
@@ -158,6 +167,52 @@ If format is `'jpeg'`, defines the quality of the image '0-100'
 
 
 # Changelog
+
+##### `4.0.2`
+
+* Fixed a bug where the wrong function was passed to the javascript function. ([#8](https://github.com/FWeinb/electron-screenshot-app/pull/8))
+
+##### `4.0.1`
+
+* Update to `electron@1.3.1`
+
+
+##### `4.0.0`
+
+* <s>Use [`view-painted`](https://github.com/electron/electron/pull/6524) Event instead of `requestAnimationFrame` hack.</s>
+* Update to `electron@1.3.1`
+
+##### `3.1.1`
+
+* Fix screenshot bug on windows. See [here](https://github.com/FWeinb/electron-screenshot-service/issues/24).
+
+##### `3.1.0`
+
+* Add support for specifying `options.js` to contain a JS function that will be executed.
+
+##### `3.0.2`
+
+* Fix a bug in correctly merging `nodeIntegration: false`.
+
+##### `3.0.1`
+
+* Improve `page` size detection.
+
+##### `3.0.0`
+
+* Upgrade to `electron@1.1.0`
+* Change option name of `loadevent` to `loadEvent`
+* Removed `nodeIntegration`. Use `webPreferences.nodeIntegration` instead.
+* Removed `secure`. Use `webPreferences.webSecurity` instead
+
+##### `2.2.0`
+
+* Update to `electron@0.36.7`
+* Add support for `jpeg` using the `format` option.
+* Add a custom [`loadevent`](#loadEvent) that can be send by the page.
+* Make it possible to disable webSecurity via `secure` option.
+
+Thanks to [nealshail](https://github.com/nealshail) for these features.
 
 ##### `2.1.0`
 

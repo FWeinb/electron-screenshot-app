@@ -1,21 +1,24 @@
 'use strict';
 
-const BrowserWindow = require('electron').BrowserWindow;
-const ipcMain = require('electron').ipcMain;
-const path = require('path');
-const objectAssign = require('object-assign');
+const {join} = require('path');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const {BrowserWindow, ipcMain} = require('electron');
+const deepAssign = require('deep-assign');
 
 module.exports = function (options, callback) {
 	if (process.env.NODESCREENSHOT_SHOW === '1') {
 		options.show = true;
 	}
 
-	let popupWindow = new BrowserWindow(objectAssign(
+	let popupWindow = new BrowserWindow(deepAssign(
 		// Defaults
 		{
 			show: false,
-			nodeIntegration: false,
-			transparent: false
+			webPreferences: {
+				nodeIntegration: false
+			},
+			transparent: false,
+			backgroundThrottling: false
 		},
 		// User values
 		options,
@@ -23,15 +26,14 @@ module.exports = function (options, callback) {
 		{
 			x: 0,
 			y: 0,
+			useContentSize: true,
 			frame: false,
 			enableLargerThanScreen: true,
 			skipTaskbar: true,
 			directWrite: true,
 			// Used to load the ipc module into $$electronIpc`
-			preload: path.join(__dirname, 'preload.js'),
 			webPreferences: {
-				webSecurity:  (options.security === undefined || options.security === true),
-				defaultEncoding: 'utf-8'
+				preload: join(__dirname, 'preload.js')
 			}
 		})
 	);
@@ -40,11 +42,11 @@ module.exports = function (options, callback) {
 		popupWindow.removeAllListeners();
 		popupWindow.webContents.removeAllListeners();
 		setTimeout(() => {
-			setTimeout(() => {
-				popupWindow.close();
+			if (popupWindow) {
+				popupWindow.destroy();
 				popupWindow = null;
-			}, 0);
-		}, 0);
+			}
+		}, 100);
 	};
 
 	let loadTimeout;
@@ -57,19 +59,21 @@ module.exports = function (options, callback) {
 		// Remove any loadTimeout
 		clearTimeout(loadTimeout);
 
+		// Only run when there is a popupWindow
+		if (popupWindow === null || popupWindow === undefined) {
+			return;
+		}
+
 		const loadEvent = `Loaded-${popupWindow.id}`;
-		const custloadEvent = `CustomLoaded-${popupWindow.id}`;
 		const sizeEvent = `Size-${popupWindow.id}`;
 
-		const loadEventName = (options.loadevent) ? custloadEvent : loadEvent;
-
 		// Register the IPC load event once
-		ipcMain.once(loadEventName, (e, meta) => {
+		ipcMain.once(loadEvent, (e, meta) => {
 			// Delay the screenshot
 			setTimeout(() => {
 				const cb = data => {
 					const obj = {
-						data: ((options.format == 'jpeg') ? data.toJpeg( (options.quality ? options.quality : 80) ) : data.toPng()),
+						data: ((options.format === 'jpeg') ? data.toJpeg((options.quality ? options.quality : 80)) : data.toPng()),
 						size: data.getSize()
 					};
 
@@ -98,9 +102,9 @@ module.exports = function (options, callback) {
 		popupWindow.webContents.executeJavaScript(`
 			var $$electron__ra = window.requestAnimationFrame;
 			function $$electron__load(){$$electronIpc.send("${loadEvent}", { devicePixelRatio: window.devicePixelRatio });};
-			function $$electron__size(){var w = window,d = document,e = d.documentElement,g = d.body,
-			width = Math.max(w.innerWidth, e.clientWidth, g.clientWidth),
-			height = Math.max(w.innerHeight, e.clientHeight, g.clientHeight);
+			function $$electron__size(){var d = document.body,dd = document.documentElement,
+			width = Math.max(d.scrollWidth, d.offsetWidth, dd.clientWidth, dd.scrollWidth, dd.offsetWidth),
+			height = Math.max(d.scrollHeight, d.offsetHeight, dd.clientHeight, dd.scrollHeight, dd.offsetHeight);
 			$$electronIpc.send("${sizeEvent}",{width: width, height: height});
 			};
 			function $$electron__loaded(){
@@ -110,14 +114,20 @@ module.exports = function (options, callback) {
 					$$electron__ra($$electron__load);
 				});
 			}
-            document.addEventListener("${options.loadevent}", function() {
-                document.body.scrollTop=' + (options.pageOffset || 0) + ';
-			    $$electron__ra(function(){
-				   $$electronIpc.send("${custloadEvent}", { devicePixelRatio: window.devicePixelRatio });
+			document.addEventListener("${options.loadEvent}", function() {
+				document.body.scrollTop=' + (options.pageOffset || 0) + ';
+					$$electron__ra(function(){
+					$$electronIpc.send("${loadEvent}", { devicePixelRatio: window.devicePixelRatio });
 				});
 			});`);
 
-		if (options.page) {
+		if (options.js !== undefined) {
+			// Wrap js code in a function and make `parameter` an alias of
+			// either $$electron__loaded or $$electron__size depending on if options.page
+			// is specified
+			const parameter = options.page ? '$$electron__size' : '$$electron__loaded';
+			popupWindow.webContents.executeJavaScript(`(${options.js.toString()})(${parameter})`);
+		} else if (options.page) {
 			popupWindow.webContents.executeJavaScript('window["$$electron__size"]()');
 		} else {
 			popupWindow.webContents.executeJavaScript('window["$$electron__loaded"]()');
@@ -138,12 +148,12 @@ module.exports = function (options, callback) {
 		cleanup();
 	});
 
-	if (options.css !== undefined) {
-		popupWindow.webContents.on('dom-ready', () => {
-			// Inject custom CSS if necessary
+	popupWindow.webContents.on('dom-ready', () => {
+		// Inject custom CSS if necessary
+		if (options.css !== undefined) {
 			popupWindow.webContents.insertCSS(options.css);
-		});
-	}
+		}
+	});
 
 	let asked = false;
 	popupWindow.webContents.on('did-stop-loading', () => {
