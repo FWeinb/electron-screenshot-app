@@ -64,7 +64,7 @@ module.exports = function (options, callback) {
 			return;
 		}
 
-		const loadEvent = `Loaded-${popupWindow.id}`;
+		const loadEvent = options.loadevent || `Loaded-${popupWindow.id}`;
 		const sizeEvent = `Size-${popupWindow.id}`;
 
 		// Register the IPC load event once
